@@ -120,6 +120,7 @@ def main():
             env.render()
             action = dqn.choose_action(state)
             next_state, _, done, info = env.step(action)
+            # next_state, reward, done, info = env.step(action)
             x, x_dot, theta, theta_dot = next_state
             reward = reward_fun(env, x, x_dot, theta, theta_dot)
 
