@@ -12,7 +12,7 @@ from torch.utils.tensorboard import SummaryWriter
 seed = 1
 render = False
 num_episodes = 2000
-env = gym.make('CartPole-v0').unwrapped
+env = gym.make('CartPole-v1').unwrapped
 num_state = env.observation_space.shape[0]
 num_action = env.action_space.n
 torch.manual_seed(seed)
@@ -34,18 +34,18 @@ class Net(nn.Module):
 
 
 class DQN:
-    # 写在这里定义的时候就是self???
-    # capacity = 8000
-    # learning_rate = 1e-3
-    # batch_size = 256
-    # gamma = 0.995
+    # 写在这里定义的时候直接转换为 self 私有属性
+    capacity = 8000
+    learning_rate = 1e-3
+    batch_size = 256
+    gamma = 0.995
 
     def __init__(self):
         super(DQN, self).__init__()
-        self.capacity = 8000
-        self.learning_rate = 1e-3
-        self.batch_size = 256
-        self.gamma = 0.995
+        # self.capacity = 8000
+        # self.learning_rate = 1e-3
+        # self.batch_size = 256
+        # self.gamma = 0.995
         self.eval_net, self.target_net = Net(), Net()
         self.memory = [None] * self.capacity
         self.memory_count = 0
@@ -109,7 +109,7 @@ def main():
             transition = Transition(state, action, reward, next_state)
             agent.store_transition(transition)
             state = next_state
-            if done or t >=9999:
+            if done or t >= 9999:
                 agent.writer.add_scalar('live/finish_step', t+1, global_step=i_ep)
                 agent.update()
                 if i_ep % 10 == 0:
