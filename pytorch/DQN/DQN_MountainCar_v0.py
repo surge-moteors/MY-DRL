@@ -10,13 +10,13 @@ from torch.utils.tensorboard import SummaryWriter
 
 # Hyper-parameters
 seed = 1234
-render = False
+render = True
 torch.manual_seed(seed)
 num_episodes = 400000
 env = gym.make('MountainCar-v0').unwrapped
 num_state = env.observation_space.shape[0]
 num_action = env.action_space.n
-env.seed(seed)
+# env.seed(seed)
 
 Transition = namedtuple('Transition', ['state', 'action', 'reward', 'next_state'])
 
@@ -36,11 +36,15 @@ class Net(nn.Module):
 def main():
     agent = DQN()
     for i_ep in range(num_episodes):
-        state = env.reset()
-        print(state)
+        state, _ = env.reset()
+        # print(state)
         for t in range(10000):
             action = agent.select_action(state)
-            next_state, reward, done, info = env.step(action)
+            # print(action)
+            # action = 1
+            # action = np.random.rand()
+            next_state, reward, done, info, _= env.step(action)
+            # print(reward)
             if render:
                 env.render()
             transition = Transition(state, action, reward, next_state)
@@ -74,10 +78,10 @@ class DQN:
         self.writer = SummaryWriter('./DQN/logs')
 
     def select_action(self, state):
-        state = torch.tensor(state, dtype=torch.float).unsqueeze(0)
+        state = torch.tensor(state, dtype=torch.float).unsqueeze(0)  # state.shape: (1,3)
         value = self.eval_net(state)
-        action_max_value, index = torch.max(value, 1)
-        action = index.item()
+        action_max_value, index = torch.max(value, 1)    # 由于第一个维度是1，因此只返回一个值 index.shape为torch.Size([1])
+        action = index.item()  # MountainCar游戏中的动作恰好是0, 1, 2 也就是index
         if np.random.rand(1) >= 0.9:
             action = np.random.choice(range(num_action), 1).item()
         return action

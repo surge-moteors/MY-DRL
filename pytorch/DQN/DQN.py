@@ -70,7 +70,7 @@ class DQN:
     def store_transition(self, state, action, reward, next_state):
         transition = np.hstack((state, [action, reward], next_state))  # 水平方向叠加/拼接
         index = self.memory_counter % MEMORY_CAPACITY
-        self.memory[index, :] = transition
+        self.memory[index] = transition
         self.memory_counter += 1
 
     def learn(self):
@@ -114,12 +114,12 @@ def main():
     plt.ion()
     fig, ax = plt.subplots()
     for i in range(episodes):
-        state = env.reset()
+        state, _ = env.reset()
         ep_reward = 0
         while True:
             env.render()
             action = dqn.choose_action(state)
-            next_state, _, done, info = env.step(action)    # self-defined reward function
+            next_state, _, done, info, _ = env.step(action)    # self-defined reward function
             # next_state, reward, done, info = env.step(action)   # naive
             x, x_dot, theta, theta_dot = next_state
             reward = reward_fun(env, x, x_dot, theta, theta_dot)
