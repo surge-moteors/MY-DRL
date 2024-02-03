@@ -35,7 +35,7 @@ class Policy(nn.Module):
         self.fc2 = nn.Linear(100, num_action)
 
         self.saved_log_probs = []
-        self.rewards = []  # todo:探究这两个是干什么用的
+        self.rewards = []
 
     def forward(self, state):
         x = F.relu(self.fc1(state))
@@ -91,6 +91,8 @@ def main():
             if done:
                 break
 
+
+        # 这里的solve判定有问题。根据任务特性去设定
         running_reward = running_reward * 0.99 + t * 0.01   # todo:这个是做什么东西的
         finish_episode()
         if i_episode % args.log_interval == 0:
