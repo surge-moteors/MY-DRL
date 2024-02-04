@@ -53,7 +53,7 @@ def select_action(state):
     probs = policy(state)
     rand = Categorical(probs)  # 按照probs中的概率去生成索引[0, 1]
     action = rand.sample()
-    policy.saved_log_probs.append(rand.log_prob(action))  # todo:rand.log_prob(action)求action在rand这个类别分布中的概率的自然对数
+    policy.saved_log_probs.append(rand.log_prob(action))
     return action.item()
 
 
